@@ -61,35 +61,57 @@ public class LinkedList<T> {
         }
     }
 
-    public func node(atIndex index: Int) -> Node? {
+    public func node(atIndex index: Int) -> Node {
         if index == 0 {
-            return head ?? nil
+            return head!
         } else {
             var node = head?.next
-            for _ in 1..<index {
+            for _ in 1 ..< index {
                 node = node?.next
                 if node == nil { break }
             }
-            return node ?? nil
+            return node!
         }
     }
 
     public func insert(value: T, atIndex index: Int) {
-        let newNode = Node(value: value)
+        let node = Node(value: value)
         if index == 0 {
-            newNode.next = head
-            head?.previous = newNode
-            head = newNode
+            node.next = head
+            head?.previous = node
+            head = node
         } else {
-            let prev = node(atIndex: index - 1)
-            let next = prev?.next
+            let prev = self.node(atIndex: index - 1)
+            let next = prev.next
 
-            newNode.previous = prev
-            newNode.next = next
+            node.previous = prev
+            node.next = next
 
-            prev?.next = newNode
-            next?.previous = newNode
+            prev.next = node
+            next?.previous = node
         }
+    }
+
+    public func remove(node: Node) -> T {
+        let prev = node.previous
+        let next = node.next
+
+        if let prev = prev {
+            prev.next = next
+        } else {
+            head = next
+        }
+        next?.previous = prev
+
+        node.previous = nil
+        node.next = nil
+
+        return node.value
+    }
+
+    public func removeAt(index: Int) -> T {
+        let nodeToRemove = node(atIndex: index)
+        return remove(node: nodeToRemove)
     }
 }
 
@@ -102,8 +124,11 @@ newLL.count
 print(newLL.first!.value)
 print(newLL.last!.value)
 
-newLL.node(atIndex: 0)?.value
-newLL.node(atIndex: 100)?.value
+newLL.node(atIndex: 0).value
+newLL.node(atIndex: 100).value
 newLL.insert(value: "newOne", atIndex: 1)
 newLL.insert(value: "newOne", atIndex: 2)
+newLL.print
+
+newLL.removeAt(index: 0)
 newLL.print
