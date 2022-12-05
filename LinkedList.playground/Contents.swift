@@ -39,6 +39,17 @@ public class LinkedList<T> {
         return count
     }
 
+    public var print: String {
+        var stringArray = "["
+        guard var node = head else { return "[]" }
+        while let next = node.next {
+            stringArray += "\(node.value), "
+            node = next
+        }
+        stringArray += "\(node.value)"
+        return stringArray + "]"
+    }
+
     public func append(value: T) {
         let newNode = Node(value: value)
         if let lastNode = last {
@@ -62,15 +73,37 @@ public class LinkedList<T> {
             return node ?? nil
         }
     }
+
+    public func insert(value: T, atIndex index: Int) {
+        let newNode = Node(value: value)
+        if index == 0 {
+            newNode.next = head
+            head?.previous = newNode
+            head = newNode
+        } else {
+            let prev = node(atIndex: index - 1)
+            let next = prev?.next
+
+            newNode.previous = prev
+            newNode.next = next
+
+            prev?.next = newNode
+            next?.previous = newNode
+        }
+    }
 }
 
 let newLL = LinkedList<String>()
 newLL.append(value: "hello")
 newLL.count
 newLL.append(value: "jae")
+newLL.append(value: "asdf")
 newLL.count
 print(newLL.first!.value)
 print(newLL.last!.value)
 
 newLL.node(atIndex: 0)?.value
 newLL.node(atIndex: 100)?.value
+newLL.insert(value: "newOne", atIndex: 1)
+newLL.insert(value: "newOne", atIndex: 2)
+newLL.print
